@@ -39,6 +39,7 @@ void voteNow()
 	int i;
 	int areyousure=5;	
 	user_t user;
+	int* p = user.above;
 	printf("Please enter your first name>");
 	scanf("%[^\n]%*c", user.firstName);
 	printf("Please enter your last name>");
@@ -50,7 +51,6 @@ void voteNow()
 	printf("2. I am voting below the line\n");*/
 	printf("You are voting in the Sydney electorate.\n");
 	printParty();
-	int* p = user.above;
 	getPrefs(p);
 	
 
@@ -89,6 +89,7 @@ void voteNow()
 	}
 	printf("Thank you for voting\n");
 }
+
 void printParty()
 {
 	printf("Below are the parties you may choose from:\n");
@@ -109,18 +110,27 @@ void printParty()
 void getPrefs(int* p)
 {
 	int i=0;
-
+	char error[1];
 	for(i=0;i<MAX_PREFERENCES;i++)
 		{
 			printf(">");
-			scanf("%d", &p[i]);
-			if (checkpref(p, i) != 0)
+			if (1 != (scanf("%d", &p[i])))
+			{
+				printf("Error; Integer Expected\n");
+				printf("Please make a new choice\n");
+
+				while (error[0] != '\n')
+				{
+					scanf("%c", &error[0]);
+				}
+				i--;
+			}
+			else if (checkpref(p, i) != 0)
 			{
 				printf("Please make a new choice\n");
 				i--;
 			}
 		}
-
 }
 
 int checkpref(int* p, int position)

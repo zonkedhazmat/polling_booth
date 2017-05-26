@@ -3,19 +3,23 @@
 #include <string.h>
 #include <stdlib.h>
 
-char xor_encrypt(char message_raw);
+char xor_encrypt();
 
 int main()
 {	
-	char message[] = "what is going on";
-	char encrypted = xor_encrypt(message);
+	char encrypted = xor_encrypt();
+	printf("%c", encrypted);
 	
 	
 	return 0;
 }
 
-char xor_encrypt(char message_raw)
+char xor_encrypt()
 {
+	char message_raw[100];
+	printf("What do you want encrypted?>");
+	fgets(message_raw,100,stdin);
+	message_raw[strlen(message_raw) -1] = '\0';
 	int message_length = strlen(message_raw);
 	char key[message_length];
 	int i;
@@ -24,13 +28,14 @@ char xor_encrypt(char message_raw)
 	{
 		key[i] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"[rand() % 36];
 	}
-	char key_length = strlen(key);
-
+	int key_length = strlen(key);
+	char message_encrypted[message_length];
 	for (i=0; i<message_length; i++)
 	{
-		message_raw[i] = message_raw[i]^key[i%key_length];
-		printf("%d", message_raw[i]);
+		message_encrypted[i] = message_raw[i]^key[i%key_length];
+		printf("%c", message_encrypted[i]);
 	}
 
 	printf("\n");
+
 }

@@ -110,7 +110,6 @@ void printParty()
 void getPrefs(int* p)
 {
 	int i=0;
-	char error[1];
 	for(i=0;i<MAX_PREFERENCES;i++)
 		{
 			printf(">");
@@ -118,11 +117,7 @@ void getPrefs(int* p)
 			{
 				printf("Error; Integer Expected\n");
 				printf("Please make a new choice\n");
-
-				while (error[0] != '\n')
-				{
-					scanf("%c", &error[0]);
-				}
+				while(getchar() != '\n');
 				i--;
 			}
 			else if (checkpref(p, i) != 0)

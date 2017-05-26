@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #define MAX_NAME_SIZE 11
 #define MAX_PREFERENCES 10
 /*Defined the amount of preferences the user chooses*/
@@ -23,15 +24,26 @@ int checkpref(int* p, int position);
 
 int main(void)
 {
-	printMenu();
-	voteNow();
-
+	char check[10];
+	char exit[5] = "exit";
+	char debug[6] = "debug";
+		do
+		{
+			printMenu();
+			voteNow();
+			printf("\nPlease press enter to continue\n");
+			fgets(check, sizeof(check),stdin);
+			if (strcmp(debug,check) != 0)
+				printf("this is a placeholder\n");
+				
+		}while ((strcmp(check, exit) != 0));
 return 0;
 }
 void printMenu(void)
 {
 	printf("\nWELCOME TO VOTE NOW\n");
 	printf("\nA TRIAL DIGITAL VOTING SYSTEM\n\n\n");
+	
 }
 
 void voteNow()
@@ -41,9 +53,9 @@ void voteNow()
 	user_t user;
 	int* p = user.above;
 	printf("Please enter your first name>");
-	scanf("%[^\n]%*c", user.firstName);
+	fgets(user.firstName, sizeof(user.firstName), stdin);
 	printf("Please enter your last name>");
-	scanf("%[^\n]%*c", user.lastName);
+	fgets(user.lastName, sizeof(user.lastName), stdin);
 	printf("Hello %s %s,", user.firstName, user.lastName);
 	/*
 	printf("\n\nSelect from the following options\n");
@@ -70,6 +82,7 @@ void voteNow()
 		printf("Are you happy with these preferences?\n");
 		printf("Enter 1 to confirm. Enter 2 to redo\n");
 		scanf("%d", &areyousure);
+		while (getchar()!='\n');
 		if(areyousure != 1)
 		{
 			printf("\n");

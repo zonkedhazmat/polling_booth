@@ -2,6 +2,7 @@
 #include <string.h>
 #define MAX_NAME_SIZE 11
 #define MAX_PREFERENCES 10
+#define MAX_USER_LIST 5
 /*Defined the amount of preferences the user chooses*/
 
 struct user
@@ -15,27 +16,31 @@ typedef struct user user_t;
 
 
 void printMenu(void);
-void voteNow(void);
+void voteNow(int listpos);
 void printParty(void);
 void printPref(int choice, int pos);
 /*Prints the users preferences*/
 void getPrefs(int* p);
 int checkpref(int* p, int position);
+void printUserlist(user_t userlist[], int listpos);
 
 int main(void)
 {
 	char check[10];
 	char exit[5] = "exit";
 	char debug[6] = "debug";
+	int listpos=0;
 		do
 		{
-			printMenu();
-			voteNow();
 			printf("\nPlease press enter to continue\n");
 			scanf("%s", check);
+			while (getchar()!='\n');
 			if (strcmp(debug,check) == 0)
 				printf("this is a placeholder\n");
-				
+			printMenu();
+			voteNow(listpos);
+			listpos++;
+			
 		}while ((strcmp(check, exit)));
 return 0;
 }
@@ -46,11 +51,12 @@ void printMenu(void)
 	
 }
 
-void voteNow()
+void voteNow(int listpos)
 {	
 	int i;
 	int areyousure=5;	
 	user_t user;
+	user_t userlist[MAX_USER_LIST];
 	int* p = user.above;
 	printf("Please enter your first name>");
 	fgets(user.firstName, sizeof(user.firstName), stdin);
@@ -100,7 +106,9 @@ void voteNow()
 			areyousure = 0;
 		}
 	}
+	userlist[listpos] = user;
 	printf("Thank you for voting\n");
+	printUserlist(userlist, listpos);
 }
 
 void printParty()
@@ -160,6 +168,20 @@ int checkpref(int* p, int position)
 	return 0;
 }
 
+void printUserlist(user_t userlist[], int listpos)
+{
+	int i=0;
+	int j=0;
+	for(i=0;i<listpos+1;i++)
+	{
+		printf("\nUser's First Name: %s", userlist[i].firstName);
+		printf("User's Last Name: %s", userlist[i].lastName);
+		for(j=0;j<=MAX_PREFERENCES;j++)
+		{	
+			printf("%d", userlist[i].above[j]);
+		}
+	}
+}
 
 void printPref(int choice, int pos)
 {

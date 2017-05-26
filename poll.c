@@ -32,11 +32,11 @@ int main(void)
 			printMenu();
 			voteNow();
 			printf("\nPlease press enter to continue\n");
-			fgets(check, sizeof(check),stdin);
-			if (strcmp(debug,check) != 0)
+			scanf("%s", check);
+			if (strcmp(debug,check) == 0)
 				printf("this is a placeholder\n");
 				
-		}while ((strcmp(check, exit) != 0));
+		}while ((strcmp(check, exit)));
 return 0;
 }
 void printMenu(void)

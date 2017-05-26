@@ -18,6 +18,7 @@ void voteNow(void);
 void printParty(void);
 void printPref(int choice);
 /*Prints the users preferences*/
+int getPrefs(int* p);
 
 int main(void)
 {
@@ -29,15 +30,13 @@ return 0;
 void printMenu(void)
 {
 	printf("\nWELCOME TO VOTE NOW\n");
-	printf("\nA TRIAL DIGITAL VOTING SYSTEM\n");
-	printf("Please hit ENTER to continue...\n");
-	/*there was a scanf("%[^\n]) here that was causing an error*/
-	while (getchar()!='\n');
+	printf("\nA TRIAL DIGITAL VOTING SYSTEM\n\n\n");
 }
 
 void voteNow()
 {	
 	int i;
+	int areyousure=5;	
 	user_t user;
 	printf("Please enter your first name>");
 	scanf("%[^\n]%*c", user.firstName);
@@ -52,12 +51,10 @@ void voteNow()
 	printf("Below are the parties you may choose from:\n");
 	printParty();
 	printf("Please make your selection by enetering your preferences in order\n");
+	int* p = user.above;
+	getPrefs(p);
+	
 
-	for(i=0;i<MAX_PREFERENCES;i++)
-		{
-			printf(">");
-			scanf("%d", &user.above[i]);
-		}
 	/*gets the users input. can be done in function, but requires parsing
 	- would probably be best as a function, since if they want to redo,
 	this would need to be called*/
@@ -68,6 +65,28 @@ void voteNow()
 		printPref(user.above[i]);
 	}
 	/*prints the users preferences*/
+
+	while(areyousure != 0)
+	{
+		printf("Are you happy with these preferences?\n");
+		printf("Enter 1 to confirm. Enter 2 to redo\n");
+		scanf("%d", &areyousure);
+		if(areyousure != 1)
+		{
+			printf("Please make your selection by enetering your preferences in order\n");
+			getPrefs(p);
+			printf("Your preferences are from highest to lowest as follows:\n");
+			for(i=0;i<=MAX_PREFERENCES;i++)
+			{	
+				printf("\n>");
+				printPref(user.above[i]);
+			}
+		}
+		else
+		{
+			areyousure = 0;
+		}
+	}
 	printf("Thank you for voting");
 
 	
@@ -85,7 +104,6 @@ void printParty()
 	printf("9. Sustainable Australia\n");		
 	printf("10. Online Direct Democracy\n");		
 }
-
 
 
 void printPref(int choice)
@@ -126,3 +144,13 @@ void printPref(int choice)
 }
 
 
+int getPrefs(int* p)
+{
+	int i=0;
+	for(i=0;i<MAX_PREFERENCES;i++)
+		{
+			printf(">");
+			scanf("%d", &p[i]);
+		}
+	return 1;
+}

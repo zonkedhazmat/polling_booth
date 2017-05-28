@@ -3,18 +3,17 @@
 #include <string.h>
 #include <stdlib.h>
 
-char xor_encrypt();
+void xor_encrypt(void);
+
 
 int main()
 {	
-	char encrypted = xor_encrypt();
-	printf("%c", encrypted);
-	
+	xor_encrypt();
 	
 	return 0;
 }
 
-char xor_encrypt()
+void xor_encrypt()
 {
 	char message_raw[100];
 	printf("What do you want encrypted?>");
@@ -35,7 +34,13 @@ char xor_encrypt()
 		message_encrypted[i] = message_raw[i]^key[i%key_length];
 		printf("%c", message_encrypted[i]);
 	}
+	/*message_encrypted[message_length] = '\0';*/
+	FILE* encrypted = fopen("encrypted","w");
+	for (i = 0; i < message_length; ++i)
+	{
+		fprintf(encrypted,"%c", message_encrypted[i]);
+	}
 
 	printf("\n");
-
+	
 }

@@ -5,6 +5,7 @@
 #define MAX_USER_LIST 5
 #define KGRN  "\x1B[32m"
 #define KWHT  "\x1B[37m"
+#define DB_FILE_NAME "tempFile"
 /*Defined the amount of preferences the user chooses*/
 
 struct user
@@ -25,6 +26,7 @@ void printPref(int choice, int pos);
 void getPrefs(int* p, int debugFlag);
 int checkpref(int* p, int position);
 void printUserlist(user_t* lp, int listpos);
+void printToFile(user_t *lp, int listpos);
 
 int main(void)
 {
@@ -167,6 +169,7 @@ void voteNow(user_t* lp, int listpos, int debugFlag)
 	lp[listpos] = user;
 	printf("Thank you for voting\n");
 	printUserlist(lp, listpos);
+	printToFile(lp, listpos);
 }
 
 void printParty()
@@ -306,6 +309,24 @@ void printPref(int choice, int pos)
 			printf("Online Direct Democracy");
 			break;
 	}
+}
+void printToFile(user_t* lp, int listpos)
+{
+	FILE * tempFile = fopen(DB_FILE_NAME, "w");
+
+	int i;
+	int j=0;
+	for(i=0;i<listpos+1;i++)
+	{
+		fprintf(tempFile,"%s ", lp[i].firstName);
+		fprintf(tempFile,"%s ", lp[i].lastName);
+		for(j=0;j<=MAX_PREFERENCES-1;j++)
+		{	
+			fprintf(tempFile,"%d ", lp[i].above[j]);
+		}
+		fprintf(tempFile, "\n");
+	}
+	fclose(tempFile);
 }
 
 

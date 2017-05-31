@@ -1,68 +1,85 @@
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 #define MAX_NAME_SIZE 11
 #define MAX_PREFERENCES 10
 #define MAX_USER_LIST 5
+#define KGRN  "\x1B[32m"
+#define KWHT  "\x1B[37m"
 /*Defined the amount of preferences the user chooses*/
 
 struct user
 {
 	char firstName[MAX_NAME_SIZE];
 	char lastName[MAX_NAME_SIZE];
-	int pref1;
-	int pref2;
-	int pref3;
-	int pref4;
-	int pref5;
-	int pref6;
-	int pref7;
-	int pref8;
-	int pref9;
-	int pref10;
-	struct node *next;
+	int above[MAX_PREFERENCES];
 	/*the users preferences are an array of ints*/
 };
 typedef struct user user_t;
 
-struct temp
-{
-	char firstName[MAX_NAME_SIZE];
-	char lastName[MAX_NAME_SIZE];
-	int above[MAX_PREFERENCES];
-	/*the users preferences are an array of ints*/
-};
-typedef struct temp temp_t;
 
 void printMenu(void);
-void voteNow(int listpos);
+void voteNow(user_t* lp, int listpos, int debugFlag);
 void printParty(void);
 void printPref(int choice, int pos);
 /*Prints the users preferences*/
-void getPrefs(int* p);
+void getPrefs(int* p, int debugFlag);
 int checkpref(int* p, int position);
-void printUserlist(temp_t templist[], int listpos);
+void printUserlist(user_t* lp, int listpos);
 
 int main(void)
 {
-
 	char check[10];
-	char exit[5] = "exit";
-	char debug[6] = "debug";
+	char exit[5] = "exit\0";
+	char debug[6] = "debug\0";
+	char buffer[1];
 	int listpos=0;
-		do
-		{
-			printf("\nPlease press enter to continue\n");
-			scanf("%s", check);
-			while (getchar()!='\n');
-			if (strcmp(debug,check) == 0)
-				printf("this is a placeholder\n");
-			printMenu();
-			voteNow(listpos);
-			listpos++;
-			
-		}while (check != 0);
+	int i=0;
+	int runningFlag =1;
+	int debugFlag=0;
+	user_t userlist[MAX_USER_LIST];
+	user_t* lp = &userlist[listpos];
+	
 
+	while (runningFlag == 1)
+	{
+		i=0;
+		printf("\nPlease press enter to continue\n");
+		scanf("%c", &buffer[0]);
+
+		while (buffer[0] != '\n')
+		{
+			while (i<6)
+			{
+				check[i] = buffer[0];
+				i++;
+				break;
+			}
+			scanf("%c", &buffer[0]);
+		}
+		check[i] = '\0';
+		if (strcmp(debug,check) == 0)
+		{
+			if (debugFlag)
+			{
+				debugFlag=0;
+			}
+			else
+			{
+				debugFlag=1;
+				printf("%sDebug activated %s\n", KGRN, KWHT);	
+			}
+
+		}
+		
+		if (strcmp(exit,check) == 0)
+		{
+			runningFlag = 0;
+			break;
+		}
+			printMenu();
+			voteNow(lp, listpos, debugFlag);
+			listpos++;
+	}
 return 0;
 }
 void printMenu(void)
@@ -72,46 +89,46 @@ void printMenu(void)
 	
 }
 
-void voteNow(int listpos)
+void voteNow(user_t* lp, int listpos, int debugFlag)
 {	
-	
-	user_t * userp = NULL;
-	userp = malloc(sizeof(user_t));
-	int i;
-	int areyousure=5;
-	temp_t temp;
-	temp_t templist[MAX_USER_LIST];
-	int* p = temp.above;
+	int i=0;
+	int areyousure=5;	
+	user_t user;
+	int* p = user.above;
+	char buffer[1];
 	printf("Please enter your first name>");
-	fgets(temp.firstName, sizeof(temp.firstName), stdin);
-	fflush(stdin);
-	/*char *firstPos;
-	if ((firstPos=strchr(temp.firstName, '\n')) != NULL)
-    {
-    	*firstPos = '\0';
-	}*/
+	while (buffer[1] != '\n')
+	{
+		scanf("%c", &buffer[1]);									
+		if (i<MAX_NAME_SIZE)
+			{
+				user.firstName[i] = buffer[1];
+				i++;
+			}
+	}
+	user.firstName[i-1] = '\0';
+	i=0;
 	printf("Please enter your last name>");
-	fgets(temp.lastName, sizeof(temp.lastName), stdin);
-	 fflush(stdin);
-	/*char *lastPos;
-	if ((lastPos=strchr(temp.lastName, '\n')) != NULL)
-    {
-    	*lastPos = '\0';
-	}*/
-	userp = (user_t*) malloc (sizeof(user_t));
-	strcpy(userp -> firstName, temp.firstName);
-	strcpy(userp -> lastName, temp.lastName);
-	printf("\n");
-	printf("\n");
-	printf("Hello %s %s,\n", userp->firstName, userp->lastName);
+	while (buffer[0] != '\n')
+	{
+		scanf("%c", &buffer[0]);									
+		if (i<MAX_NAME_SIZE)
+			{
+				user.lastName[i] = buffer[0];
+				i++;
+			}
+	}
+	user.lastName[i-1] = '\0';
+	i=0;
+	printf("Hello %s %s,", user.firstName, user.lastName);
 	/*
 	printf("\n\nSelect from the following options\n");
 	printf("1. I am voing above the line\n");
 	printf("2. I am voting below the line\n");*/
 	printf("You are voting in the Sydney electorate.\n");
 	printParty();
-	getPrefs(p);
-
+	getPrefs(p, debugFlag);
+	
 
 	/*gets the users input. can be done in function, but requires parsing
 	- would probably be best as a function, since if they want to redo,
@@ -120,7 +137,7 @@ void voteNow(int listpos)
 	for(i=0;i<=MAX_PREFERENCES;i++)
 	{	
 		printf("\n");
-		printPref(temp.above[i], i);
+		printPref(user.above[i], i);
 	}
 	/*prints the users preferences*/
 
@@ -134,12 +151,12 @@ void voteNow(int listpos)
 		{
 			printf("\n");
 			printParty();
-			getPrefs(p);
+			getPrefs(p, debugFlag);
 			printf("Your preferences are from highest to lowest as follows:\n");
 			for(i=0;i<=MAX_PREFERENCES;i++)
 			{	
 				printf("\n");
-				printPref(temp.above[i], i);
+				printPref(user.above[i], i);
 			}
 		}
 		else
@@ -147,20 +164,9 @@ void voteNow(int listpos)
 			areyousure = 0;
 		}
 	}
-	userp -> pref1 = temp.above[1];
-	userp -> pref2 = temp.above[2];
-	userp -> pref3 = temp.above[3];
-	userp -> pref4 = temp.above[4];
-	userp -> pref5 = temp.above[5];
-	userp -> pref6 = temp.above[6];
-	userp -> pref7 = temp.above[7];
-	userp -> pref8 = temp.above[8];
-	userp -> pref9 = temp.above[9];
-	userp -> pref10 = temp.above[10];
-	userp -> next = NULL;
-	templist[listpos] = temp;
+	lp[listpos] = user;
 	printf("Thank you for voting\n");
-	printUserlist(templist, listpos);
+	printUserlist(lp, listpos);
 }
 
 void printParty()
@@ -180,8 +186,26 @@ void printParty()
 }
 
 
-void getPrefs(int* p)
+void getPrefs(int* p, int debugFlag)
 {
+	char skip;
+	if (debugFlag == 1)
+	{
+		
+		printf("%sDEBUG: Enter s here to skip%s\n", KGRN, KWHT);
+		scanf("%c", &skip);
+		if(skip == 's')
+		{
+			int j=0;
+			for(j=0;j<MAX_PREFERENCES;j++)
+			{
+				p[j] = j+1;
+			}
+		}
+	}
+	
+	if(debugFlag == 0 || skip != 's')
+	{
 	int i=0;
 	for(i=0;i<MAX_PREFERENCES;i++)
 		{
@@ -199,6 +223,7 @@ void getPrefs(int* p)
 				i--;
 			}
 		}
+	}
 }
 
 int checkpref(int* p, int position)
@@ -220,19 +245,18 @@ int checkpref(int* p, int position)
 	return 0;
 }
 
-void printUserlist(temp_t templist[], int listpos)
+void printUserlist(user_t* lp, int listpos)
 {
 	int i=0;
 	int j=0;
 	for(i=0;i<listpos+1;i++)
 	{
-		printf("\nUser's First Name: %s", templist[i].firstName);
-		printf("\n");
-		printf("User's Last Name: %s", templist[i].lastName);
-		printf("\n");
-		for(j=0;j<=MAX_PREFERENCES-1;j++)
+		printf("\nUser's First Name: %s\n", lp[i].firstName);
+		printf("User's Last Name: %s\n", lp[i].lastName);
+		printf("User's Prefs are\n");
+		for(j=0;j<MAX_PREFERENCES;j++)
 		{	
-			printf("%d", templist[i].above[j]);
+			printf("%d", lp[i].above[j]);
 		}
 	}
 }
@@ -283,4 +307,5 @@ void printPref(int choice, int pos)
 			break;
 	}
 }
+
 

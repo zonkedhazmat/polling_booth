@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #define MAX_NAME_SIZE 11
 #define MAX_PREFERENCES 10
 #define MAX_USER_LIST 5
@@ -9,11 +10,29 @@ struct user
 {
 	char firstName[MAX_NAME_SIZE];
 	char lastName[MAX_NAME_SIZE];
-	int above[MAX_PREFERENCES];
+	int pref1;
+	int pref2;
+	int pref3;
+	int pref4;
+	int pref5;
+	int pref6;
+	int pref7;
+	int pref8;
+	int pref9;
+	int pref10;
+	struct node *next;
 	/*the users preferences are an array of ints*/
 };
 typedef struct user user_t;
 
+struct temp
+{
+	char firstName[MAX_NAME_SIZE];
+	char lastName[MAX_NAME_SIZE];
+	int above[MAX_PREFERENCES];
+	/*the users preferences are an array of ints*/
+};
+typedef struct temp temp_t;
 
 void printMenu(void);
 void voteNow(int listpos);
@@ -22,10 +41,11 @@ void printPref(int choice, int pos);
 /*Prints the users preferences*/
 void getPrefs(int* p);
 int checkpref(int* p, int position);
-void printUserlist(user_t userlist[], int listpos);
+void printUserlist(temp_t templist[], int listpos);
 
 int main(void)
 {
+
 	char check[10];
 	char exit[5] = "exit";
 	char debug[6] = "debug";
@@ -41,7 +61,8 @@ int main(void)
 			voteNow(listpos);
 			listpos++;
 			
-		}while ((strcmp(check, exit)));
+		}while (check != 0);
+
 return 0;
 }
 void printMenu(void)
@@ -53,16 +74,36 @@ void printMenu(void)
 
 void voteNow(int listpos)
 {	
+	
+	user_t * userp = NULL;
+	userp = malloc(sizeof(user_t));
 	int i;
-	int areyousure=5;	
-	user_t user;
-	user_t userlist[MAX_USER_LIST];
-	int* p = user.above;
+	int areyousure=5;
+	temp_t temp;
+	temp_t templist[MAX_USER_LIST];
+	int* p = temp.above;
 	printf("Please enter your first name>");
-	fgets(user.firstName, sizeof(user.firstName), stdin);
+	fgets(temp.firstName, sizeof(temp.firstName), stdin);
+	fflush(stdin);
+	/*char *firstPos;
+	if ((firstPos=strchr(temp.firstName, '\n')) != NULL)
+    {
+    	*firstPos = '\0';
+	}*/
 	printf("Please enter your last name>");
-	fgets(user.lastName, sizeof(user.lastName), stdin);
-	printf("Hello %s %s,", user.firstName, user.lastName);
+	fgets(temp.lastName, sizeof(temp.lastName), stdin);
+	 fflush(stdin);
+	/*char *lastPos;
+	if ((lastPos=strchr(temp.lastName, '\n')) != NULL)
+    {
+    	*lastPos = '\0';
+	}*/
+	userp = (user_t*) malloc (sizeof(user_t));
+	strcpy(userp -> firstName, temp.firstName);
+	strcpy(userp -> lastName, temp.lastName);
+	printf("\n");
+	printf("\n");
+	printf("Hello %s %s,\n", userp->firstName, userp->lastName);
 	/*
 	printf("\n\nSelect from the following options\n");
 	printf("1. I am voing above the line\n");
@@ -70,7 +111,7 @@ void voteNow(int listpos)
 	printf("You are voting in the Sydney electorate.\n");
 	printParty();
 	getPrefs(p);
-	
+
 
 	/*gets the users input. can be done in function, but requires parsing
 	- would probably be best as a function, since if they want to redo,
@@ -79,7 +120,7 @@ void voteNow(int listpos)
 	for(i=0;i<=MAX_PREFERENCES;i++)
 	{	
 		printf("\n");
-		printPref(user.above[i], i);
+		printPref(temp.above[i], i);
 	}
 	/*prints the users preferences*/
 
@@ -98,7 +139,7 @@ void voteNow(int listpos)
 			for(i=0;i<=MAX_PREFERENCES;i++)
 			{	
 				printf("\n");
-				printPref(user.above[i], i);
+				printPref(temp.above[i], i);
 			}
 		}
 		else
@@ -106,9 +147,20 @@ void voteNow(int listpos)
 			areyousure = 0;
 		}
 	}
-	userlist[listpos] = user;
+	userp -> pref1 = temp.above[1];
+	userp -> pref2 = temp.above[2];
+	userp -> pref3 = temp.above[3];
+	userp -> pref4 = temp.above[4];
+	userp -> pref5 = temp.above[5];
+	userp -> pref6 = temp.above[6];
+	userp -> pref7 = temp.above[7];
+	userp -> pref8 = temp.above[8];
+	userp -> pref9 = temp.above[9];
+	userp -> pref10 = temp.above[10];
+	userp -> next = NULL;
+	templist[listpos] = temp;
 	printf("Thank you for voting\n");
-	printUserlist(userlist, listpos);
+	printUserlist(templist, listpos);
 }
 
 void printParty()
@@ -168,17 +220,19 @@ int checkpref(int* p, int position)
 	return 0;
 }
 
-void printUserlist(user_t userlist[], int listpos)
+void printUserlist(temp_t templist[], int listpos)
 {
 	int i=0;
 	int j=0;
 	for(i=0;i<listpos+1;i++)
 	{
-		printf("\nUser's First Name: %s", userlist[i].firstName);
-		printf("User's Last Name: %s", userlist[i].lastName);
-		for(j=0;j<=MAX_PREFERENCES;j++)
+		printf("\nUser's First Name: %s", templist[i].firstName);
+		printf("\n");
+		printf("User's Last Name: %s", templist[i].lastName);
+		printf("\n");
+		for(j=0;j<=MAX_PREFERENCES-1;j++)
 		{	
-			printf("%d", userlist[i].above[j]);
+			printf("%d", templist[i].above[j]);
 		}
 	}
 }
@@ -229,5 +283,4 @@ void printPref(int choice, int pos)
 			break;
 	}
 }
-
 

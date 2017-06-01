@@ -93,23 +93,27 @@ void printMenu(void)
 
 void voteNow(user_t* lp, int listpos, int debugFlag)
 {	
-	int i=0;
+	int i;
 	int areyousure=5;	
 	user_t user;
 	int* p = user.above;
 	char buffer[1];
+	buffer[0] = '\0';
+	i=0;
 	printf("Please enter your first name>");
-	while (buffer[1] != '\n')
+	while (buffer[0] != '\n')
 	{
-		scanf("%c", &buffer[1]);									
+		scanf("%c", &buffer[0]);									
 		if (i<MAX_NAME_SIZE)
 			{
-				user.firstName[i] = buffer[1];
+				user.firstName[i] = buffer[0];
 				i++;
 			}
 	}
 	user.firstName[i-1] = '\0';
+
 	i=0;
+	buffer[0] = '\0';
 	printf("Please enter your last name>");
 	while (buffer[0] != '\n')
 	{
@@ -136,7 +140,7 @@ void voteNow(user_t* lp, int listpos, int debugFlag)
 	- would probably be best as a function, since if they want to redo,
 	this would need to be called*/
 	printf("Your preferences are from highest to lowest as follows:\n");
-	for(i=0;i<=MAX_PREFERENCES;i++)
+	for(i=0;i<MAX_PREFERENCES;i++)
 	{	
 		printf("\n");
 		printPref(user.above[i], i);
@@ -145,7 +149,7 @@ void voteNow(user_t* lp, int listpos, int debugFlag)
 
 	while(areyousure != 0)
 	{
-		printf("Are you happy with these preferences?\n");
+		printf("\nAre you happy with these preferences?\n");
 		printf("Enter 1 to confirm. Enter 2 to redo\n");
 		scanf("%d", &areyousure);
 		while (getchar()!='\n');
@@ -155,7 +159,7 @@ void voteNow(user_t* lp, int listpos, int debugFlag)
 			printParty();
 			getPrefs(p, debugFlag);
 			printf("Your preferences are from highest to lowest as follows:\n");
-			for(i=0;i<=MAX_PREFERENCES;i++)
+			for(i=0;i<MAX_PREFERENCES;i++)
 			{	
 				printf("\n");
 				printPref(user.above[i], i);

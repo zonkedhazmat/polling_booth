@@ -4,7 +4,7 @@
 #define MAX_PREFERENCES 10
 #define MAX_USER_LIST 5
 #define KGRN  "\x1B[32m"
-#define KWHT  "\x1B[37m"
+#define KNRM  "\x1B[0m"
 #define DB_FILE_NAME "tempFile"
 /*Defined the amount of preferences the user chooses*/
 
@@ -68,7 +68,7 @@ int main(void)
 			else
 			{
 				debugFlag=1;
-				printf("%sDebug activated %s\n", KGRN, KWHT);	
+				printf("%sDebug activated %s\n", KGRN, KNRM);	
 			}
 
 		}
@@ -195,7 +195,7 @@ void getPrefs(int* p, int debugFlag)
 	if (debugFlag == 1)
 	{
 		
-		printf("%sDEBUG: Enter s here to skip%s\n", KGRN, KWHT);
+		printf("%sDEBUG: Enter s here to skip%s\n", KGRN, KNRM);
 		scanf("%c", &skip);
 		if(skip == 's')
 		{

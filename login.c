@@ -97,3 +97,6 @@ int main(void)
 		{
 			printf("Wrong username or password\n\n");
 		}
+	}
+		return 0;
+}

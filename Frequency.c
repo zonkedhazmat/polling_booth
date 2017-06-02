@@ -5,7 +5,7 @@ int main() {
     char data[255];
     int c=0;
     int count[75] = {0};
-    fb = fopen("Input.txt", "r");
+    fb = fopen("tempFile", "r");
     fgets(data, 255, fb);
 
     /* Start finding frequency*/

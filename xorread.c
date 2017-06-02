@@ -15,31 +15,15 @@ int main()
 
 void xor_decrypt()
 {
-	int c, i;
-	FILE* encrypted = fopen("encrypted", "r");
-	char *message_raw;
-	size_t n = 0;
-
-	if (encrypted == NULL)
-	{
-		printf("File can't be opened.");
-	}
-
-	fseek(encrypted, 0, SEEK_END);
-	long f_size = ftell(encrypted);
-	fseek(encrypted, 0, SEEK_SET);
-	message_raw = malloc(f_size);
-
-	while ((c = fgetc(encrypted)) != EOF)
-	{
-		message_raw[n++] = (char) c;
-	}
-	/*message_raw[n] = '\0';*/
-	
+	char message_raw[1000];
+	FILE* fp = fopen("encrypted", "r");
+	fgets(message_raw,1000,fp);
+	message_raw[strlen(message_raw) -1] = '\0'; 
 	int message_length = strlen(message_raw);
 	char key[message_length];
-	srand(message_length);
-	for (i=1; i<message_length; i++)
+	int i;
+	/*srand(message_length);*/
+	for (i=0; i<message_length; i++)
 	{
 		key[i] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"[rand() % 36];
 	}
@@ -50,8 +34,6 @@ void xor_decrypt()
 		message_decrypted[i] = message_raw[i]^key[i%key_length];
 		printf("%c", message_decrypted[i]);
 	}
+	/*message_encrypted[message_length] = '\0';*/
 
-
-	printf("\n");
-	
 }

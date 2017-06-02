@@ -1,0 +1,45 @@
+#include <stdio.h>
+
+int main() {
+    FILE *fb;
+    char data[255];
+    int c = 0;
+    int count[75] = { 0 };
+    fb = fopen("Input.txt", "r");
+    fgets(data, 255, fb);
+
+    /* Start finding frequency*/
+    while (data[c] != '\0')
+    {
+        if (data[c] >= 'a' && data[c] <= 'z') 
+            count[data[c] - 'a']++;
+        else if (data[c] >= 'A' && data[c] <= 'Z')
+            count[data[c] - 'A' + 26]++; 
+        else if (data[c] >= '0' && data[c] <= '9')
+            count[data[c] - '0' + 51]++; 
+        c++;
+    }
+
+    for (c = 0; c < 61; c++)
+    {
+        /** Printing only those characters
+        whose count is at least 1 */
+        if (count[c] != 0) {
+            if (c < 26)
+                printf("%c occurs %d times in the entered string.\n", c + 'a', count[c]); 
+
+               
+            else if (c < 52)
+                printf("%c occurs %d times in the entered string.\n", c + 'A' - 26, count[c]);
+
+                
+
+            else if (c >= 52)
+                printf("%c occurs %d times in the entered string.\n", c + '0' - 51, count[c]);
+
+                
+        }
+    }
+
+    return 0;
+}

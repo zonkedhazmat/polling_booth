@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include "xorwrite.h"
 #define MAX_NAME_SIZE 11
 #define MAX_PREFERENCES 10
 #define MAX_USER_LIST 5
@@ -7,6 +9,8 @@
 #define KNRM  "\x1B[0m"/*Normal Text colour*/
 #define DB_FILE_NAME "tempFile"
 /*Defined the amount of preferences the user chooses*/
+
+#define DEBUG
 
 struct user
 {
@@ -22,11 +26,11 @@ void printMenu(void);
 /*Prints the opening to the program*/
 void getString(char* p);
 /*Reads a string from the user*/
-void voteNow(user_t* lp, int listpos, int debugFlag);
+void voteNow(user_t* lp, int listpos);
 /*The main function, creates and stores a user using other functions*/
 void printParty(void);
 /*Prints the party options for users to choose from*/
-void getPrefs(int* p, int debugFlag);
+void getPrefs(int* p);
 /*Gets the users preferences*/
 void printPref(int choice, int pos);
 /*Prints the users preferences*/
@@ -50,38 +54,30 @@ int main(void)
 	/*The amount of users, position in the user array*/
 	int runningFlag =1;
 	/*Used for exiting the program*/
-	int debugFlag=0;
-	/*Used to tell if debug is active or inactive*/
-
+	#ifdef DEBUG
+		printf("%sDebug mode is active", KGRN, KNRM);
+	#endif	
 	while (runningFlag == 1)
 	{
 		printf("\nPlease press enter to continue\n");
 		getString(cp);
 		/*Generally skipped, to continue with the program, but entering debug
-		or exit here, enters debug mode, or exits the program respectively.*/
-		if (strcmp("debug\0",check) == 0)
-		{
-			if (debugFlag)
-			{
-				debugFlag=0;
-			}
-			else
-			{
-				debugFlag=1;
-				printf("%sDebug activated %s\n", KGRN, KNRM);	
-			}
-		}
-		
+		or exit here, enters debug mode, or exits the program respectively.*/	
 		if (strcmp("exit\0",check) == 0)
 		{
 			runningFlag = 0;
 			break;
 		}
 			printMenu();
-			voteNow(lp, listpos, debugFlag);
+			voteNow(lp, listpos);
 			/*Creates a new user*/
 			listpos++;
 			/*Increases the amount of users*/
+			#ifdef DEBUG
+			printf("%slistpos = %d%s", KGRN, listpos, KNRM);
+			#endif	
+			/*Debug: listposition is accurate*/
+			
 	}
 return 0;
 }
@@ -93,7 +89,7 @@ void printMenu(void)
 	
 }
 
-void voteNow(user_t* lp, int listpos, int debugFlag)
+void voteNow(user_t* lp, int listpos)
 {	
 	int i=0;
 	/*Used for various loops*/
@@ -113,7 +109,7 @@ void voteNow(user_t* lp, int listpos, int debugFlag)
 	printf("You are voting in the Sydney electorate.\n");
 	printParty();
 	/*Prints the selection of parties*/
-	getPrefs(p, debugFlag);
+	getPrefs(p);
 	/*gets the users input for their preferences, debug features*/
 	printf("Your preferences are from highest to lowest as follows:\n");
 	for(i=0;i<MAX_PREFERENCES;i++)
@@ -134,7 +130,7 @@ void voteNow(user_t* lp, int listpos, int debugFlag)
 		{
 			printf("\n");
 			printParty();
-			getPrefs(p, debugFlag);
+			getPrefs(p);
 			/*if the user was unsure, allows them to redo*/
 			printf("Your preferences are from highest to lowest as follows:\n");
 			for(i=0;i<MAX_PREFERENCES;i++)
@@ -175,6 +171,9 @@ void getString(char* p)
 			/*Only a certain amount of characters are actually stored*/
 	}
 	p[i-1] = '\0';
+	#ifdef DEBUG
+			printf("%sstored string is = %s%s", KGRN, p, KNRM);
+	#endif	
 	/*Null termination is important!*/
 }
 
@@ -195,10 +194,11 @@ void printParty()
 }
 
 
-void getPrefs(int* p, int debugFlag)
+void getPrefs(int* p)
 {
-	char skip;
-	if (debugFlag == 1)
+	
+	#ifdef DEBUG
+	char skip ='\0';
 	{
 		printf("%sDEBUG: Enter s here to skip%s\n", KGRN, KNRM);
 		scanf("%c", &skip);
@@ -210,9 +210,11 @@ void getPrefs(int* p, int debugFlag)
 				p[j] = j+1;
 			}
 		}
+		else skip = '\0';
 	}
+	#endif
 	/*Debug feature, saves having to input 1-10 every time, defaults in order*/
-	if(debugFlag == 0 || skip != 's')
+	if (skip == '\0')
 	{
 	int i=0;
 	for(i=0;i<MAX_PREFERENCES;i++)
@@ -243,6 +245,7 @@ int checkpref(int* p, int position)
 	{
 		printf("Error; please enter an integer within the range.\n");
 		return 1;
+		/*returns if error*/
 	}
 	/*Handles integers outside the expected range*/
 	int i=0;
@@ -252,10 +255,12 @@ int checkpref(int* p, int position)
 		{
 			printf("Error; you have already selected that party.\n");
 			return 1;
+			/*returns if error*/
 		}
 	}
 	/*Checks if the user has already selected that party*/
 	return 0;
+	/*returns if success*/
 }
 
 void printUserlist(user_t* lp, int listpos)
@@ -339,6 +344,7 @@ void printToFile(user_t* lp, int listpos)
 		fprintf(tempFile, "\n");
 	}
 	fclose(tempFile);
+	xor_encrypt();	
 }
 
 

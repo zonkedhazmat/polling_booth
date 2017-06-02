@@ -59,14 +59,6 @@ void printArray(int ints[], int len)
     printf("\n");
 }
 
-void printArr(int arr[], int n)
-{
-    int i;
-    for (i = 0; i < n; ++i)
-    printf("%d", arr[i]);
-    printf("\n");
-}
-
 int isLeaf(struct Node* root)
 {
     return !(root->left) && !(root->right) ;
@@ -101,7 +93,6 @@ void printCodes(struct Node* root, int array[], int top,int **characters)
         }
         characters[index][top]=-1;
         printf("\n");
-/*printArr(arr, top,characters); */
     }
 }
 

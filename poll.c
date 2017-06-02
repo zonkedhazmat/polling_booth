@@ -1,5 +1,7 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include "xorwrite.h"
 #define MAX_NAME_SIZE 11
 #define MAX_PREFERENCES 10
 #define MAX_USER_LIST 5
@@ -84,6 +86,7 @@ int main(void)
 	}
 return 0;
 }
+
 void printMenu(void)
 {
 	printf("\nWELCOME TO VOTE NOW\n");
@@ -174,6 +177,7 @@ void voteNow(user_t* lp, int listpos, int debugFlag)
 	printf("Thank you for voting\n");
 	printUserlist(lp, listpos);
 	printToFile(lp, listpos);
+	
 }
 
 void printParty()
@@ -265,7 +269,9 @@ void printUserlist(user_t* lp, int listpos)
 		{	
 			printf("%d", lp[i].above[j]);
 		}
+		xor_encrypt();
 	}
+
 }
 
 void printPref(int choice, int pos)
@@ -328,6 +334,7 @@ void printToFile(user_t* lp, int listpos)
 		{	
 			fprintf(tempFile,"%d ", lp[i].above[j]);
 		}
+
 		fprintf(tempFile, "\n");
 	}
 	fclose(tempFile);

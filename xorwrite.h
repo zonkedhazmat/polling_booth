@@ -4,6 +4,7 @@ void xor_encrypt()
 	char message_raw[1000];
 	FILE* fp = fopen("tempFile", "r");
 	fgets(message_raw,1000,fp);
+	fclose(fp);
 	message_raw[strlen(message_raw) -1] = '\0'; 
 	int message_length = strlen(message_raw);
 	char key[message_length];

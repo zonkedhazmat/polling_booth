@@ -269,7 +269,7 @@ void printUserlist(user_t* lp, int listpos)
 		{	
 			printf("%d", lp[i].above[j]);
 		}
-		xor_encrypt();
+
 	}
 
 }
@@ -338,6 +338,7 @@ void printToFile(user_t* lp, int listpos)
 		fprintf(tempFile, "\n");
 	}
 	fclose(tempFile);
+	xor_encrypt();
 }
 
 

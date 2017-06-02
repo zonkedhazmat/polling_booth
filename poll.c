@@ -1,12 +1,10 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include "xorwrite.h"
 #define MAX_NAME_SIZE 11
 #define MAX_PREFERENCES 10
 #define MAX_USER_LIST 5
-#define KGRN  "\x1B[32m"
-#define KNRM  "\x1B[0m"
+#define KGRN  "\x1B[32m"/*Green Text colour for Debug mode*/
+#define KNRM  "\x1B[0m"/*Normal Text colour*/
 #define DB_FILE_NAME "tempFile"
 /*Defined the amount of preferences the user chooses*/
 
@@ -21,47 +19,47 @@ typedef struct user user_t;
 
 
 void printMenu(void);
+/*Prints the opening to the program*/
+void getString(char* p);
+/*Reads a string from the user*/
 void voteNow(user_t* lp, int listpos, int debugFlag);
+/*The main function, creates and stores a user using other functions*/
 void printParty(void);
+/*Prints the party options for users to choose from*/
+void getPrefs(int* p, int debugFlag);
+/*Gets the users preferences*/
 void printPref(int choice, int pos);
 /*Prints the users preferences*/
-void getPrefs(int* p, int debugFlag);
 int checkpref(int* p, int position);
+/*Checks whether the user has selected the party yet or not*/
 void printUserlist(user_t* lp, int listpos);
+/*Prints all the data of all the users*/
 void printToFile(user_t *lp, int listpos);
+/*Saves all the data of all users to the file*/
+
 
 int main(void)
 {
 	char check[10];
-	char exit[5] = "exit\0";
-	char debug[6] = "debug\0";
-	char buffer[1];
-	int listpos=0;
-	int i=0;
-	int runningFlag =1;
-	int debugFlag=0;
+	char* cp = check;
+	/*Used to check for additional functions*/
 	user_t userlist[MAX_USER_LIST];
-	user_t* lp = &userlist[listpos];
-	
+	user_t* lp = userlist;
+	/*The array of all users struct user_t, and its pointer*/
+	int listpos=0;
+	/*The amount of users, position in the user array*/
+	int runningFlag =1;
+	/*Used for exiting the program*/
+	int debugFlag=0;
+	/*Used to tell if debug is active or inactive*/
 
 	while (runningFlag == 1)
 	{
-		i=0;
 		printf("\nPlease press enter to continue\n");
-		scanf("%c", &buffer[0]);
-
-		while (buffer[0] != '\n')
-		{
-			while (i<6)
-			{
-				check[i] = buffer[0];
-				i++;
-				break;
-			}
-			scanf("%c", &buffer[0]);
-		}
-		check[i] = '\0';
-		if (strcmp(debug,check) == 0)
+		getString(cp);
+		/*Generally skipped, to continue with the program, but entering debug
+		or exit here, enters debug mode, or exits the program respectively.*/
+		if (strcmp("debug\0",check) == 0)
 		{
 			if (debugFlag)
 			{
@@ -72,17 +70,18 @@ int main(void)
 				debugFlag=1;
 				printf("%sDebug activated %s\n", KGRN, KNRM);	
 			}
-
 		}
 		
-		if (strcmp(exit,check) == 0)
+		if (strcmp("exit\0",check) == 0)
 		{
 			runningFlag = 0;
 			break;
 		}
 			printMenu();
 			voteNow(lp, listpos, debugFlag);
+			/*Creates a new user*/
 			listpos++;
+			/*Increases the amount of users*/
 	}
 return 0;
 }
@@ -96,52 +95,26 @@ void printMenu(void)
 
 void voteNow(user_t* lp, int listpos, int debugFlag)
 {	
-	int i;
-	int areyousure=5;	
+	int i=0;
+	/*Used for various loops*/
+	int areyousure=1;	
+	/*Used as a flag, if users need to re-enter input*/
 	user_t user;
 	int* p = user.above;
-	char buffer[1];
-	buffer[0] = '\0';
-	i=0;
+	/*New user, and its pointer*/
+	char* first = user.firstName;
+	char* last = user.lastName;
+	/*pointers for getString*/
 	printf("Please enter your first name>");
-	while (buffer[0] != '\n')
-	{
-		scanf("%c", &buffer[0]);									
-		if (i<MAX_NAME_SIZE)
-			{
-				user.firstName[i] = buffer[0];
-				i++;
-			}
-	}
-	user.firstName[i-1] = '\0';
-
-	i=0;
-	buffer[0] = '\0';
+	getString(first);
 	printf("Please enter your last name>");
-	while (buffer[0] != '\n')
-	{
-		scanf("%c", &buffer[0]);									
-		if (i<MAX_NAME_SIZE)
-			{
-				user.lastName[i] = buffer[0];
-				i++;
-			}
-	}
-	user.lastName[i-1] = '\0';
-	i=0;
+	getString(last);
 	printf("Hello %s %s,", user.firstName, user.lastName);
-	/*
-	printf("\n\nSelect from the following options\n");
-	printf("1. I am voing above the line\n");
-	printf("2. I am voting below the line\n");*/
 	printf("You are voting in the Sydney electorate.\n");
 	printParty();
+	/*Prints the selection of parties*/
 	getPrefs(p, debugFlag);
-	
-
-	/*gets the users input. can be done in function, but requires parsing
-	- would probably be best as a function, since if they want to redo,
-	this would need to be called*/
+	/*gets the users input for their preferences, debug features*/
 	printf("Your preferences are from highest to lowest as follows:\n");
 	for(i=0;i<MAX_PREFERENCES;i++)
 	{	
@@ -151,6 +124,7 @@ void voteNow(user_t* lp, int listpos, int debugFlag)
 	/*prints the users preferences*/
 
 	while(areyousure != 0)
+	/*Allows for a loop until the user confirms their choices*/
 	{
 		printf("\nAre you happy with these preferences?\n");
 		printf("Enter 1 to confirm. Enter 2 to redo\n");
@@ -161,23 +135,47 @@ void voteNow(user_t* lp, int listpos, int debugFlag)
 			printf("\n");
 			printParty();
 			getPrefs(p, debugFlag);
+			/*if the user was unsure, allows them to redo*/
 			printf("Your preferences are from highest to lowest as follows:\n");
 			for(i=0;i<MAX_PREFERENCES;i++)
 			{	
 				printf("\n");
 				printPref(user.above[i], i);
 			}
+			/*Prints the user's redone preferences*/
 		}
 		else
 		{
 			areyousure = 0;
 		}
+		/*exits the loop once confirmed*/
 	}
 	lp[listpos] = user;
+	/*assigns the new user, into the userlist array*/
 	printf("Thank you for voting\n");
 	printUserlist(lp, listpos);
 	printToFile(lp, listpos);
-	
+}
+
+void getString(char* p)
+{
+	char buffer[1];
+	int i;
+	i=0;
+	buffer[0] = '\0';
+	while (buffer[0] != '\n')
+	/*buffer array to read infinite characters until new line is entered*/
+	{
+		scanf("%c", &buffer[0]);									
+		if (i<MAX_NAME_SIZE)
+			{
+				p[i] = buffer[0];
+				i++;
+			}
+			/*Only a certain amount of characters are actually stored*/
+	}
+	p[i-1] = '\0';
+	/*Null termination is important!*/
 }
 
 void printParty()
@@ -202,7 +200,6 @@ void getPrefs(int* p, int debugFlag)
 	char skip;
 	if (debugFlag == 1)
 	{
-		
 		printf("%sDEBUG: Enter s here to skip%s\n", KGRN, KNRM);
 		scanf("%c", &skip);
 		if(skip == 's')
@@ -214,7 +211,7 @@ void getPrefs(int* p, int debugFlag)
 			}
 		}
 	}
-	
+	/*Debug feature, saves having to input 1-10 every time, defaults in order*/
 	if(debugFlag == 0 || skip != 's')
 	{
 	int i=0;
@@ -222,17 +219,20 @@ void getPrefs(int* p, int debugFlag)
 		{
 			printf(">");
 			if (1 != (scanf("%d", &p[i])))
+				/*Checks whether input was valid*/
 			{
 				printf("Error; Integer Expected\n");
 				printf("Please make a new choice\n");
 				while(getchar() != '\n');
 				i--;
 			}
+			/*Handles non-integer input*/
 			else if (checkpref(p, i) != 0)
 			{
 				printf("Please make a new choice\n");
 				i--;
 			}
+			/*Handles invalid integer input*/
 		}
 	}
 }
@@ -244,6 +244,7 @@ int checkpref(int* p, int position)
 		printf("Error; please enter an integer within the range.\n");
 		return 1;
 	}
+	/*Handles integers outside the expected range*/
 	int i=0;
 	for(i=0;i<position;i++)
 	{
@@ -253,6 +254,7 @@ int checkpref(int* p, int position)
 			return 1;
 		}
 	}
+	/*Checks if the user has already selected that party*/
 	return 0;
 }
 
@@ -269,14 +271,14 @@ void printUserlist(user_t* lp, int listpos)
 		{	
 			printf("%d", lp[i].above[j]);
 		}
-
 	}
-
+	/*mostly for debug, goes through the list of users, prints their data*/
 }
 
 void printPref(int choice, int pos)
 {
 	switch(choice)
+	/*Prints the user's preferences in order, with their labels*/
 	{
 		case 1:
 			printf("%d. ", (pos+1));
@@ -334,11 +336,9 @@ void printToFile(user_t* lp, int listpos)
 		{	
 			fprintf(tempFile,"%d ", lp[i].above[j]);
 		}
-
 		fprintf(tempFile, "\n");
 	}
 	fclose(tempFile);
-	xor_encrypt();
 }
 
 

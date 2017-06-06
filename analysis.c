@@ -57,7 +57,7 @@ int main(void)
 	for (i = 0; i < 4; i++)
 	{
 		temp =  (struct user *)malloc(sizeof(struct user));
-		fscanf(tempFile,"%s %s %2d %2d %2d %2d %2d %2d %2d %2d %2d %2d \n", temp -> firstName, temp -> lastName,
+		fscanf(tempFile,"%s %s %d %d %d %d %d %d %d %d %d %d \n", temp -> firstName, temp -> lastName,
 		&temp -> pref1,
 		&temp -> pref2,
 		&temp -> pref3,

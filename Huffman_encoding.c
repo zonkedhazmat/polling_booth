@@ -210,7 +210,7 @@ char * readFile(char * inputFile)
 int main() 
 {
         char * characters;
-        characters = readFile("Input.txt");
+        characters = readFile("tempFile");
         int i = 0, j = 0;
         
         int index, frequency[256] = {0};      

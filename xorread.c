@@ -17,8 +17,9 @@ void xor_decrypt()
 {
 	char message_raw[1000];
 	FILE* fp = fopen("encrypted", "r");
-	fgets(message_raw,1000,fp);
-	message_raw[strlen(message_raw) -1] = '\0'; 
+	while (fgets(message_raw,1000,fp))
+	{
+	message_raw[strlen(message_raw) -1] = '\0';
 	int message_length = strlen(message_raw);
 	char key[message_length];
 	int i;
@@ -35,5 +36,5 @@ void xor_decrypt()
 		printf("%c", message_decrypted[i]);
 	}
 	/*message_encrypted[message_length] = '\0';*/
-
+	}
 }

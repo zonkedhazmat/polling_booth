@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "xorwrite.h"
+#include "xor.h"
 #define MAX_NAME_SIZE 11
 #define MAX_PREFERENCES 10
 #define MAX_USER_LIST 5

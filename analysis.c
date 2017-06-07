@@ -113,9 +113,6 @@ void login(void)
 	struct Login k={"kalist","list"};
 	/* temporary storage for user input of username and password */
 	struct Login admin;
-
-	/* used to control while loop */ 
-	int n = 0;
 	
 	/* Gets username from user */
 	printf("\nWelcome!\n");
@@ -124,10 +121,6 @@ void login(void)
 	/* input username stored in admin struct */
 	scanf("%s", admin.name);
 
-	/* while loop causes code to be repeated until correct username and 
-	   password are entered*/
-	while (n == 0)
-	{
 		/* admin username compared to hard coded usernames and appropriate 
 	   	if loop will then open */
 	
@@ -143,8 +136,6 @@ void login(void)
 			if (strcmp(admin.pass,ad.pass)==0)
 			{
 				printf("Login Successful\n\n");
-				/* ends while loop */
-				n = 1;
 			}
 			/* If password is wrong prints 'Wrong username or password */
 			else
@@ -165,8 +156,6 @@ void login(void)
 			if (strcmp(admin.pass,am.pass)==0)
 			{
 				printf("Login Successful\n\n");
-				/* ends while loop */
-				n = 1;
 			}
 			/* If password is wrong prints 'Wrong username or password */
 			else
@@ -187,8 +176,6 @@ void login(void)
 			if (strcmp(admin.pass,g.pass)==0)
 			{
 				printf("Login Successful\n\n");
-				/* ends while loop */
-				n = 1;
 			}
 			/* If password is wrong prints 'Wrong username or password */
 			else
@@ -209,8 +196,6 @@ void login(void)
 			if (strcmp(admin.pass,h.pass)==0)
 			{
 				printf("Login Successful\n\n");
-				/* ends while loop */
-				n = 1;
 			}
 			/* If password is wrong prints 'Wrong username or password */
 			else
@@ -231,8 +216,6 @@ void login(void)
 			if (strcmp(admin.pass,k.pass)==0)
 			{
 				printf("Login Successful\n\n");
-				/* ends while loop */
-				n = 1;
 			}
 			/* If password is wrong prints 'Wrong username or password */
 			else

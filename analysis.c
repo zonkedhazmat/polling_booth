@@ -114,6 +114,9 @@ void login(void)
 	/* temporary storage for user input of username and password */
 	struct Login admin;
 
+	/* used to control while loop */ 
+	int n = 0;
+	
 	/* Gets username from user */
 	printf("\nWelcome!\n");
 	printf("Please login\n");
@@ -121,106 +124,121 @@ void login(void)
 	/* input username stored in admin struct */
 	scanf("%s", admin.name);
 
-	/* admin username compared to hard coded usernames and appropriate 
-	   if loop will then open */
-	
-	/* Alexa Donovan */
-	if (strcmp(admin.name,ad.name)==0)
+	/* while loop causes code to be repeated until correct username and 
+	   password are entered*/
+	while (n == 0)
 	{
-		/* Gets password from user */
-		printf("Password: ");
-		/* input password stored in admin */
-		scanf("%s", admin.pass);
-
-		/* If password is correct prints 'Login Successful' */
-		if (strcmp(admin.pass,ad.pass)==0)
-		{
-			printf("Login Successful\n\n");
-		}
-		/* If password is wrong prints 'Wrong username or password */
-		else
-		{
-			printf("Wrong username or password\n\n");
-		}
-	}
+		/* admin username compared to hard coded usernames and appropriate 
+	   	if loop will then open */
 	
-	/* Anh Minh Tran */
-	else if (strcmp(admin.name,am.name)==0)
-	{
-		/* Gets password from user */
-		printf("Password: ");
-		/* input password stored in admin */
-		scanf("%s", admin.pass);
+		/* Alexa Donovan */
+		if (strcmp(admin.name,ad.name)==0)
+		{
+			/* Gets password from user */
+			printf("Password: ");
+			/* input password stored in admin */
+			scanf("%s", admin.pass);
 
-		/* If password is correct prints 'Login Successful' */
-		if (strcmp(admin.pass,am.pass)==0)
-		{
-			printf("Login Successful\n\n");
+			/* If password is correct prints 'Login Successful' */
+			if (strcmp(admin.pass,ad.pass)==0)
+			{
+				printf("Login Successful\n\n");
+				/* ends while loop */
+				n = 1;
+			}
+			/* If password is wrong prints 'Wrong username or password */
+			else
+			{
+				printf("Wrong username or password\n\n");
+			}
 		}
-		/* If password is wrong prints 'Wrong username or password */
-		else
-		{
-			printf("Wrong username or password\n\n");
-		}
-	}
 	
-	/* Georgina Szanyel */
-	else if (strcmp(admin.name,g.name)==0)
-	{
-		/* Gets password from user */
-		printf("Password: ");
-		/* input password stored in admin */
-		scanf("%s", admin.pass);
+		/* Anh Minh Tran */
+		else if (strcmp(admin.name,am.name)==0)
+		{
+			/* Gets password from user */
+			printf("Password: ");
+			/* input password stored in admin */
+			scanf("%s", admin.pass);
 
-		/* If password is correct prints 'Login Successful' */
-		if (strcmp(admin.pass,g.pass)==0)
-		{
-			printf("Login Successful\n\n");
+			/* If password is correct prints 'Login Successful' */
+			if (strcmp(admin.pass,am.pass)==0)
+			{
+				printf("Login Successful\n\n");
+				/* ends while loop */
+				n = 1;
+			}
+			/* If password is wrong prints 'Wrong username or password */
+			else
+			{
+				printf("Wrong username or password\n\n");
+			}
 		}
-		/* If password is wrong prints 'Wrong username or password */
-		else
-		{
-			printf("Wrong username or password\n\n");
-		}
-	}
 	
-	/* Harry Soiland */
-	else if (strcmp(admin.name,h.name)==0)
-	{
-		/* Gets password from user */
-		printf("Password: ");
-		/* input password stored in admin */
-		scanf("%s", admin.pass);
+		/* Georgina Szanyel */
+		else if (strcmp(admin.name,g.name)==0)
+		{
+			/* Gets password from user */
+			printf("Password: ");
+			/* input password stored in admin */
+			scanf("%s", admin.pass);
 
-		/* If password is correct prints 'Login Successful' */
-		if (strcmp(admin.pass,h.pass)==0)
-		{
-			printf("Login Successful\n\n");
+			/* If password is correct prints 'Login Successful' */
+			if (strcmp(admin.pass,g.pass)==0)
+			{
+				printf("Login Successful\n\n");
+				/* ends while loop */
+				n = 1;
+			}
+			/* If password is wrong prints 'Wrong username or password */
+			else
+			{
+				printf("Wrong username or password\n\n");
+			}
 		}
-		/* If password is wrong prints 'Wrong username or password */
-		else
-		{
-			printf("Wrong username or password\n\n");
-		}
-	}
 	
-	/* Kalist Uremovic */
-	else if (strcmp(admin.name,k.name)==0)
-	{
-		/* Gets password from user */
-		printf("Password: ");
-		/* input password stored in admin */
-		scanf("%s", admin.pass);
+		/* Harry Soiland */
+		else if (strcmp(admin.name,h.name)==0)
+		{
+			/* Gets password from user */
+			printf("Password: ");
+			/* input password stored in admin */
+			scanf("%s", admin.pass);
 
-		/* If password is correct prints 'Login Successful' */
-		if (strcmp(admin.pass,k.pass)==0)
-		{
-			printf("Login Successful\n\n");
+			/* If password is correct prints 'Login Successful' */
+			if (strcmp(admin.pass,h.pass)==0)
+			{
+				printf("Login Successful\n\n");
+				/* ends while loop */
+				n = 1;
+			}
+			/* If password is wrong prints 'Wrong username or password */
+			else
+			{
+				printf("Wrong username or password\n\n");
+			}
 		}
-		/* If password is wrong prints 'Wrong username or password */
-		else
+	
+		/* Kalist Uremovic */
+		else if (strcmp(admin.name,k.name)==0)
 		{
-			printf("Wrong username or password\n\n");
+			/* Gets password from user */
+			printf("Password: ");
+			/* input password stored in admin */
+			scanf("%s", admin.pass);
+
+			/* If password is correct prints 'Login Successful' */
+			if (strcmp(admin.pass,k.pass)==0)
+			{
+				printf("Login Successful\n\n");
+				/* ends while loop */
+				n = 1;
+			}
+			/* If password is wrong prints 'Wrong username or password */
+			else
+			{
+				printf("Wrong username or password\n\n");
+			}
 		}
 	}
 }

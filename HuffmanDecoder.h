@@ -82,14 +82,7 @@ void printCodes(struct Node * root, int array[], int top, int * * characters)
                         characters[index][i] = array[i];
                 }
 
-                printf("\n%c -> ", (char) index);
-
-                for (i = 0; i < top; i++) 
-                {
-                        printf("%d", characters[index][i]);
-                }
                 characters[index][top] = -1;
-                printf("\n");
         }
 }
 
@@ -168,7 +161,7 @@ struct Node * readTree(FILE * fp){
 /*******************************************************************************
 Main
 *******************************************************************************/
-int main() 
+int huffdecode() 
 {
 
 	FILE *fp1;
@@ -185,7 +178,6 @@ int main()
 	printCodes(root, path, 0, encoded);
 	char * characters;
 	characters = readFile("EncodedOutput.txt");
-	printf("\nRead from file : %s\n\n", characters);
 
 	printf("\nDecoded string: ");
 	decode(root, characters);

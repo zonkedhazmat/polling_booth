@@ -2,7 +2,7 @@ void xor_encrypt()
 {
 	char *message_raw = NULL; /* Pointer to message to be encrypted */
 	size_t size = 0; /* Initialise size of message */
-	FILE* fp = fopen("Compressed.txt", "r"); /* Open compressed file */
+	FILE* fp = fopen("EncodedOutput.txt", "r"); /* Open compressed file */
 	fseek(fp,0,SEEK_END); /* Scan for size of file */
 	size = ftell(fp);
 	rewind(fp); /* Reset cursor of scanner */
@@ -42,7 +42,10 @@ void xor_decrypt()
 	message_raw =  malloc((size + 1) * sizeof(*message_raw));
 	fread(message_raw,size,1,fp); /*Put file data into char */
 	message_raw[size] = '\0'; /* Nullcharacter */
-	printf("%s\n", message_raw); /* Checking */
+	if (message_raw == NULL)
+	{
+	    printf("Error allocating memory!");
+	}
 	char key[size]; /* Initialise key with same size as file */
 	int i;
 		for (i=0; i<size; i++)
@@ -54,6 +57,10 @@ void xor_decrypt()
 		{
 			message_decrypted[i] = message_raw[i]^key[i];
 		}
-		printf("%s\n", message_decrypted); /* Checking */
+		if (message_decrypted != NULL)
+		{
+		    printf("Decryption Success");
+		    printf("\n");
+		}
 		fclose(fp);
 }

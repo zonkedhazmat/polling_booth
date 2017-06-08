@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "xor.h"
+#include "HuffmanEncoder.h"
 #define MAX_NAME_SIZE 11
 #define MAX_PREFERENCES 10
 #define MAX_USER_LIST 5
@@ -10,7 +11,7 @@
 #define DB_FILE_NAME "tempFile"
 /*Defined the amount of preferences the user chooses*/
 
-#define DEBUG
+/*#define DEBUG*/
 
 struct user
 {
@@ -56,7 +57,7 @@ int main(void)
 	/*Used for exiting the program*/
 	#ifdef DEBUG
 		printf("%sDebug mode is active", KGRN, KNRM);
-	#endif	
+	#endif
 	while (runningFlag == 1)
 	{
 		printf("\nPlease press enter to continue\n");
@@ -196,9 +197,9 @@ void printParty()
 
 void getPrefs(int* p)
 {
-	
-	#ifdef DEBUG
 	char skip ='\0';
+	#ifdef DEBUG
+	
 	{
 		printf("%sDEBUG: Enter s here to skip%s\n", KGRN, KNRM);
 		scanf("%c", &skip);
@@ -344,7 +345,9 @@ void printToFile(user_t* lp, int listpos)
 		fprintf(tempFile, "\n");
 	}
 	fclose(tempFile);
-	xor_encrypt();	
+	encode();
+	xor_encrypt();
+	
 }
 
 

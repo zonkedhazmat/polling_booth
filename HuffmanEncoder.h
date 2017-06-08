@@ -222,7 +222,7 @@ void writeTree(struct Node * root, FILE * fp)
 /*******************************************************************************
 Main
 *******************************************************************************/
-int main() 
+int encode() 
 {
         char * characters;
         characters = readFile("tempFile");

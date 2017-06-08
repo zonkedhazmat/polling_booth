@@ -8,12 +8,11 @@ List structs - Maintains character and its frequency in a structure
 struct Node 
 {
 	char character;
-        int frequency;
+	int frequency;
 	struct Node * left;
 	struct Node * right;
 } * temp = NULL, * node1 = NULL, * node2 = NULL;
-/* declare the temp, node1 ,node2 so that in lower function, 
-just have to initialize*/
+/* declare the temp, node1 ,node2 so that in lower function, just have to initialize*/
 
 /*******************************************************************************
 newNode
@@ -28,12 +27,13 @@ struct Node * newNode(char character, int frequency)
         temp -> frequency = frequency;
         return temp;
 }
+
 /*******************************************************************************
 newNodeWithChilds
 Function to create a new node with children
 *******************************************************************************/
-struct Node * newNodeWithChilds(char character, 
-int frequency, struct Node * leftNode, struct Node * rightNode) 
+struct Node * newNodeWithChilds(char character,
+int frequency,struct Node * leftNode, struct Node * rightNode) 
 
 {
         struct Node * temp = (struct Node * ) malloc(sizeof(struct Node));
@@ -53,18 +53,20 @@ void sort(struct Node ** minheapArray, int size)
         int i = 0;
         int j = 0;
         for (i = 0; i < size; i++) 
-        {
+	{
                 for (j = i + 1; j < size; j++) 
-                {
-                if ((minheapArray[i]->frequency > minheapArray[j]->frequency)) 
-                {
-                        struct Node * temp = minheapArray[i];
-                        minheapArray[i] = minheapArray[j];
-                        minheapArray[j] = temp;
-                }
+		{
+
+                 if((minheapArray[i]->frequency > minheapArray[j] -> frequency)) 
+			{
+                                struct Node * temp = minheapArray[i];
+                                minheapArray[i] = minheapArray[j];
+                                minheapArray[j] = temp;
+                        }
                 }
         }
 }
+
 
 /*******************************************************************************
 isLeaf
@@ -81,38 +83,30 @@ generates the individual binary codes of characters from the huffman tree
 *******************************************************************************/
 void printCodes(struct Node * root, int array[], int top, int * * characters) 
 {
-        
         /*if node has left node */
-	if (root -> left != NULL) 
-        {
+		if (root -> left != NULL) 
+	{
                 array[top] = 0;
                 printCodes(root -> left, array, top + 1, characters);
         }
 		/*if node has right node */
         if (root -> right != NULL) 
-        {
+	{
                 array[top] = 1;
                 printCodes(root -> right, array, top + 1, characters);
         }
 
 		/*if node is a leaf, then its a character */
         if (isLeaf(root)) 
-        {
+	{
                 /*Choose index base on the ascii value */
-                int index = (int) root -> character;
+                int index = (int) root -> character; 
                 int i = 0;
                 for (i = 0; i < top; i++) 
-                {
+		{
                         characters[index][i] = array[i];
                 }
-                printf("\n%c -> ", (char) index);
-
-                for (i = 0; i < top; i++) 
-                {
-                        printf("%d", characters[index][i]);
-                }
                 characters[index][top] = -1;
-                printf("\n");
         }
 }
 
@@ -130,13 +124,13 @@ struct Node * buildHuffManTree(char characters[], int frequency[], int size)
 		/*initial array contains all the characters as individual node
 		(in sorted manner - called sorting) */
         for (i = 0; i < size; i++) 
-        {
+	{
                 minheapArray[i] = newNode(characters[i], frequency[i]);
         }
 		sort(minheapArray, size);
 		
         if (size >= 2) 
-        {
+	{
 	/*during every iteration the first 2 nodes (as they are minimum) 
 	will be taken and formed and kept in first node and second node
  	will be harcoded This will be either an already clubbed node, 
@@ -169,10 +163,39 @@ struct Node * buildHuffManTree(char characters[], int frequency[], int size)
         }
 		/* Free the other pointers, good practice */
 		for (i = 1; i < size; i++) 
-                {
+		{
                 free(minheapArray[i]);
+	        }
+	        return root;
+}
+
+/*******************************************************************************
+decode
+Function to decode the encoded characters
+*******************************************************************************/
+void decode(struct Node * root, int * encodeString) {
+        int i;
+        struct Node * temp = root;
+		FILE *fp;
+		char output[]="DecodedOutput.txt";
+		fp=fopen(output,"w");
+        for (i = 0; encodeString[i] != -1; i++) {
+
+                if (encodeString[i] == 1) {
+                        temp = temp -> right;
+                } else {
+                        temp = temp -> left;
                 }
-        return root;
+
+                if (isLeaf(temp)) {
+                        printf("%c", temp -> character);
+						fprintf(fp,"%c",temp -> character);
+                        temp = root;
+                }
+
+        }
+		fclose(fp);
+
 }
 
 /*******************************************************************************
@@ -189,34 +212,15 @@ char * readFile(char * inputFile)
         if (file == NULL)
                 return NULL;
 
-        characters = malloc(32000);
+        characters = malloc(1000);
 
         while ((c = fgetc(file)) != EOF) 
-        {
-                characters[n++] = (char) c;
+	{
+		characters[n++] = (char) c;
         }
         characters[n] = '\0';
 
         return characters;
-}
-
-/*******************************************************************************
-writeTree
-Function to write tthe Huffman tree for decoding
-*******************************************************************************/
-void writeTree(struct Node * root, FILE * fp)
-{
-	if(isLeaf(root))
-        {
-		fprintf(fp,"1");
-		fprintf(fp,"%c",root->character);
-	}
-	else
-	{
-		fprintf(fp,"0");
-		writeTree(root->left,fp);
-		writeTree(root->right,fp);
-	}
 }
 
 /*******************************************************************************
@@ -226,36 +230,30 @@ int main()
 {
         char * characters;
         characters = readFile("tempFile");
-        printf("\nRead from file : %s\n\n", characters);
-        int i = 0;
-        int j = 0;
-
-        int index, frequency[256] = {0};
+        int i = 0, j = 0;
+        int index, frequency[256] = {0};      
         for (index = 0; characters[index] != '\0'; index++) 
-        {
-                frequency[(int) characters[index]]++;
+	    {
+                frequency[(int)characters[index]]++;
         }
-        i = 0;
         int size = 0;
         for (index = 0; index < 256; index++) 
-        {
-                if (frequency[index] != 0) 
-                {
+	    {
+		    if (frequency[index] != 0) 
+		    {
                         size++;
-                }
+            }
         }
         char arr[size];
         int freq[size];
-        printf("\nCharacter   Frequency\n");
         for (index = 0; index < 256; index++) 
-        {
-                if (frequency[index] != 0) 
-                {
+	    {
+		    if (frequency[index] != 0) 
+		    {
                         arr[i] = (char) index;
                         freq[i] = frequency[index];
-                        printf("%5c%10d\n", index, frequency[index]);
                         i++;
-                }
+            }
         }
 
         arr[i] = '\0';
@@ -265,41 +263,44 @@ int main()
         int * encoded[256];
 
         for (i = 0; i < 256; i++)
-                encoded[i] = (int * ) malloc(100 * sizeof(int));
+        encoded[i] = (int * ) malloc(100 * sizeof(int));
         printCodes(start, path, 0, encoded);
-
-        printf("\n String before encoding : %s", characters);
-
-        int encodedString[32000] = {-1};
-
+        
+        int encodedString[500] = {-1};
         int s = 0;
+        for (index = 0; characters[index] != '\0'; index++) 
+	    {
+		for (j = 0; encoded[(int) characters[index]][j] != -1; j++) 
+		{
+            encodedString[s] = encoded[(int) characters[index]][j];
+            s++;
+        }
+        }
 
         FILE *fp;
-		char output[]="EncodedOutput.txt";
+		char output[]="Compressed.txt";
 		fp=fopen(output,"w");
-        for (index = 0; characters[index] != '\0'; index++) 
-        {
-                for (j = 0; encoded[(int) characters[index]][j] != -1; j++) 
-                {
-                        encodedString[s] = encoded[(int) characters[index]][j];
-                        s++;
-                }
-        }
-		
         encodedString[s] = -1;
-        printf("\n Encoded string: ");
         for (j = 0; encodedString[j] != -1; j++) 
-        {
-                printf("%d", encodedString[j]);
-				fprintf(fp,"%d",encodedString[j]);
+	    {
+            printf("%d", encodedString[j]);
+            fprintf(fp,"%d",encodedString[j]); 
         }
-		fclose(fp);
+        fclose(fp); 
         printf("\n");
-		FILE *fp1;
-		char output1[]="HuffManTree.txt";
-		fp1=fopen(output1,"w");
-		writeTree(start,fp1);
-		fclose(fp1);
 
+        decode(start, encodedString);
+        printf("\n");
+
+       int ret;
+        ret = remove("Input.txt");
+        if ( ret == 0)
+        {
+            printf("Input file deleted successfully \n");
+        }
+        else
+        {
+            printf("Error: Unable to delete input file");
+        } 
         return 0;
 }

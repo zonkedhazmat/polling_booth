@@ -1,18 +1,35 @@
+
+/*******************************************************************************
+List of header files
+*******************************************************************************/
 #include <stdio.h>
+/* Functions Used
+ - scanf
+ - printf
+ - switch
+ - fopen
+ - fclose
+ - fprintf */
 #include <string.h>
+/* Functions Used
+ - strcmp */
 #include <stdlib.h>
 #include "xor.h"
+/* Functions Used
+ - xor_encrypt */
 #include "HuffmanEncoder.h"
-#define MAX_NAME_SIZE 11
-#define MAX_PREFERENCES 10
-#define MAX_USER_LIST 5
+/* Functions Used
+ - encode */
+#define MAX_NAME_SIZE 11 /*Max number of chars for any strings*/
+#define MAX_PREFERENCES 10 /*Max number of preferences for any user*/
+#define MAX_USER_LIST 200 /*Max number of users*/
 #define KGRN  "\x1B[32m"/*Green Text colour for Debug mode*/
 #define KNRM  "\x1B[0m"/*Normal Text colour*/
 #define DB_FILE_NAME "tempFile"
-/*Defined the amount of preferences the user chooses*/
 
-#define DEBUG
+#define DEBUG /*Can be commented out to access debug features*/
 
+/*user structure - contains the information for users*/
 struct user
 {
 	char firstName[MAX_NAME_SIZE];
@@ -42,7 +59,9 @@ void printUserlist(user_t* lp, int listpos);
 void printToFile(user_t *lp, int listpos);
 /*Saves all the data of all users to the file*/
 
-
+/*******************************************************************************
+Main
+*******************************************************************************/
 int main(void)
 {
 	char check[10];
@@ -62,8 +81,8 @@ int main(void)
 	{
 		printf("\nPlease press enter to continue\n");
 		getString(cp);
-		/*Generally skipped, to continue with the program, but entering debug
-		or exit here, enters debug mode, or exits the program respectively.*/	
+	/*Generally skipped, to continue with the program, but entering debug
+	or exit here, enters debug mode, or exits the program respectively.*/	
 		if (strcmp("exit\0",check) == 0)
 		{
 			runningFlag = 0;
@@ -83,6 +102,15 @@ int main(void)
 return 0;
 }
 
+
+/*******************************************************************************
+printMenu
+This function prints the initial menu
+inputs:
+- none
+outputs:
+- none
+*******************************************************************************/
 void printMenu(void)
 {
 	printf("\nWELCOME TO VOTE NOW\n");
@@ -90,6 +118,17 @@ void printMenu(void)
 	
 }
 
+
+/*******************************************************************************
+voteNow
+This function creates a user and collects their information before adding
+them to the array.
+inputs:
+- pointer to the array of users
+- how many users exist (position in the list)
+outputs:
+- Does not return anything, but alters arrays based on pointers
+*******************************************************************************/
 void voteNow(user_t* lp, int listpos)
 {	
 	int i=0;
@@ -133,7 +172,8 @@ void voteNow(user_t* lp, int listpos)
 			printParty();
 			getPrefs(p);
 			/*if the user was unsure, allows them to redo*/
-			printf("Your preferences are from highest to lowest as follows:\n");
+			printf("Your preferences are"); 
+			printf("from highest to lowest as follows:\n");
 			for(i=0;i<MAX_PREFERENCES;i++)
 			{	
 				printf("\n");
@@ -156,6 +196,15 @@ void voteNow(user_t* lp, int listpos)
 	printToFile(lp, listpos);
 }
 
+
+/*******************************************************************************
+getString
+This function reads user input and stores it as a string.
+inputs:
+- pointer for where the string is to be stored
+outputs:
+- Does not return anything, but alters string based on pointers
+*******************************************************************************/
 void getString(char* p)
 {
 	char buffer[1];
@@ -165,13 +214,14 @@ void getString(char* p)
 	while (buffer[0] != '\n')
 	/*buffer array to read infinite characters until new line is entered*/
 	{
-		scanf("%c", &buffer[0]);									
+		scanf("%c", &buffer[0]);				
 		if (i<MAX_NAME_SIZE)
 			{
 				p[i] = buffer[0];
 				i++;
 			}
-			/*Only a certain amount of characters are actually stored*/
+			/*Only a certain amount of 
+			characters are actually stored*/
 	}
 	p[i-1] = '\0';
 	#ifdef DEBUG
@@ -180,6 +230,14 @@ void getString(char* p)
 	/*Null termination is important!*/
 }
 
+/*******************************************************************************
+printParty
+This function prints the available parties to the user.
+inputs:
+- none
+outputs:
+- none
+*******************************************************************************/
 void printParty()
 {
 	printf("Below are the parties you may choose from:\n");
@@ -193,10 +251,18 @@ void printParty()
 	printf("8. Australian Sex Party\n");		
 	printf("9. Sustainable Australia\n");		
 	printf("10. Online Direct Democracy\n");	
-	printf("Please make your selection by enetering your preferences in order\n");	
+	printf("Please make your selection by");
+	printf("enetering your preferences in order\n");	
 }
 
-
+/*******************************************************************************
+getPrefs
+This function reads the preferences input from the user. Debug to skip
+inputs:
+- pointer to where the preferences will be stored
+outputs:
+- Does not return anything but alters using pointers and arrays
+*******************************************************************************/
 void getPrefs(int* p)
 {
 	char skip ='\0';
@@ -216,7 +282,8 @@ void getPrefs(int* p)
 		else skip = '\0';
 	}
 	#endif
-	/*Debug feature, saves having to input 1-10 every time, defaults in order*/
+	/*Debug feature, saves having to input 1-10 every time, 
+	defaults in order*/
 	if (skip == '\0')
 	{
 	int i=0;
@@ -226,7 +293,7 @@ void getPrefs(int* p)
 			if (1 != (scanf("%d", &p[i])))
 				/*Checks whether input was valid*/
 			{
-				printf("Error; Integer Expected\n");
+				printf("Error;Integer Expected\n");
 				printf("Please make a new choice\n");
 				while(getchar() != '\n');
 				i--;
@@ -242,11 +309,22 @@ void getPrefs(int* p)
 	}
 }
 
+/*******************************************************************************
+checkpref
+This function checks the user's preference input to be valid for data type, 
+range, and if it has already been selected.
+inputs:
+- pointer to the current array of user's preferences
+- integer of how many preferences the user has already selected
+outputs:
+- Returns 1 if there was an error
+- Returns 0 if no error
+*******************************************************************************/
 int checkpref(int* p, int position)
 {
 	if(MAX_PREFERENCES < p[position] || p[position] <= 0)
 	{
-		printf("Error; please enter an integer within the range.\n");
+		printf("Error;please enter an integer within the range.\n");
 		return 1;
 		/*returns if error*/
 	}
@@ -256,7 +334,7 @@ int checkpref(int* p, int position)
 	{
 		if (p[position] == p[i])
 		{
-			printf("Error; you have already selected that party.\n");
+			printf("Error;you have already selected that party.\n");
 			return 1;
 			/*returns if error*/
 		}
@@ -266,6 +344,15 @@ int checkpref(int* p, int position)
 	/*returns if success*/
 }
 
+/*******************************************************************************
+printUserlist
+This function is for debug purposes and prints the preferences for all users
+inputs:
+- pointer to user list
+- integer of amount of users
+outputs:
+- none
+*******************************************************************************/
 void printUserlist(user_t* lp, int listpos)
 {
 	int i=0;
@@ -283,6 +370,16 @@ void printUserlist(user_t* lp, int listpos)
 	/*mostly for debug, goes through the list of users, prints their data*/
 }
 
+/*******************************************************************************
+printPref
+This function is run through a loop and prints the users preferences with 
+the labels in order.
+inputs:
+- the users preference as an int
+- the current position in the array of user's preferences
+outputs:
+- none
+*******************************************************************************/
 void printPref(int choice, int pos)
 {
 	switch(choice)
@@ -330,6 +427,17 @@ void printPref(int choice, int pos)
 			break;
 	}
 }
+
+/*******************************************************************************
+printToFile
+Very similar to printUser, writes the data for all users to a file, then 
+compresses and encrypts it.
+inputs:
+- pointer to the array of users
+- the amount of users as an int
+outputs:
+- none
+*******************************************************************************/
 void printToFile(user_t* lp, int listpos)
 {
 	FILE * tempFile = fopen(DB_FILE_NAME, "w");

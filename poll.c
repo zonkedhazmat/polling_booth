@@ -11,7 +11,7 @@
 #define DB_FILE_NAME "tempFile"
 /*Defined the amount of preferences the user chooses*/
 
-/*#define DEBUG*/
+#define DEBUG
 
 struct user
 {
@@ -56,7 +56,7 @@ int main(void)
 	int runningFlag =1;
 	/*Used for exiting the program*/
 	#ifdef DEBUG
-		printf("%sDebug mode is active", KGRN, KNRM);
+		printf("%sDebug mode is active%s", KGRN, KNRM);
 	#endif
 	while (runningFlag == 1)
 	{
@@ -150,7 +150,9 @@ void voteNow(user_t* lp, int listpos)
 	lp[listpos] = user;
 	/*assigns the new user, into the userlist array*/
 	printf("Thank you for voting\n");
-	printUserlist(lp, listpos);
+	#ifdef DEBUG
+		printUserlist(lp, listpos);
+	#endif
 	printToFile(lp, listpos);
 }
 
